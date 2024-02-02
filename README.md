@@ -1,2 +1,2 @@
 # PetConnect
-PetConnect: Lietotne mājdzīvnieku un klaiņojošu dzīvnieku aprūpei
+Lielais praktiskais darbs kursā Programminženierija. PetConnect lietotnes dokumentācija.
