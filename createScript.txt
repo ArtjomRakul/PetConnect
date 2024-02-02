@@ -1,0 +1,93 @@
+CREATE TABLE FiziskaPersona(
+       FiziskaPersonaID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+  	   Tips varchar(25) NOT NULL,
+       Apraksts varchar(200),
+       Epasts varchar(40) NOT NULL,
+       Uzvards varchar(30) NOT NULL,
+       Vards varchar(25) NOT NULL,
+	   Lietotajvards varchar(50) NOT NULL,
+	   Parole varchar(20) NOT NULL
+);
+CREATE TABLE DzivniekaProfils(
+       DzivniekaProfilsID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	   Vards varchar(20) NOT NULL,
+       Skirne varchar(30) NOT NULL, 
+	   DzimsanasDiena date NOT NULL,
+       Pase varbinary(max),
+       Tips varchar(20) NOT NULL,
+	   FiziskaPersonaID INT NOT NULL FOREIGN KEY REFERENCES FiziskaPersona(FiziskaPersonaID)
+);
+CREATE TABLE Zinojums(
+       ZinojumsID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+       Sanemejs INT NOT NULL FOREIGN KEY REFERENCES FiziskaPersona(FiziskaPersonaID),
+	   Sutitajs INT NOT NULL FOREIGN KEY REFERENCES FiziskaPersona(FiziskaPersonaID),
+       Saturs varchar(500) NOT NULL
+);
+CREATE TABLE Sludinajums(
+       SludinajumsID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	   Saturs varchar(1000) NOT NULL,
+       Tips varchar(20) NOT NULL, 
+	   FiziskaPersonaID INT NOT NULL FOREIGN KEY REFERENCES FiziskaPersona(FiziskaPersonaID),
+       DzivniekaProfilsId INT NOT NULL FOREIGN KEY REFERENCES DzivniekaProfils(DzivniekaProfilsID)
+);
+
+CREATE TABLE Komentars(
+       KomentarsID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+       SludinajumsID INT FOREIGN KEY REFERENCES Sludinajums(SludinajumsID),
+       DzivniekaProfilsID INT FOREIGN KEY REFERENCES DzivniekaProfils(DzivniekaProfilsID),
+	   Saturs varchar(500) NOT NULL,
+	   Tips varchar(20) NOT NULL
+);
+
+CREATE TABLE Pielikums(
+       PielikumsID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+  	   ZinojumsID INT FOREIGN KEY REFERENCES Zinojums(ZinojumsID),
+       KomentarsID INT FOREIGN KEY REFERENCES Komentars(KomentarsID),
+       SludinajumsID INT FOREIGN KEY REFERENCES Sludinajums(SludinajumsID),
+	   BinarieFaili varbinary(max) NOT NULL,
+	   Tips varchar(20) NOT NULL
+);
+CREATE TABLE LietotajaVertejums(
+       Sanemejs INT NOT NULL,
+       KomentarsID INT NOT NULL,
+       Sutitajs INT NOT NULL,
+       Vertejums INT NOT NULL CHECK (Vertejums BETWEEN 1 AND 5),
+  	   PRIMARY KEY(Sanemejs, KomentarsID, Sutitajs),
+  	   FOREIGN KEY (Sanemejs) REFERENCES FiziskaPersona(FiziskaPersonaId),
+	   FOREIGN KEY (KomentarsID) REFERENCES Komentars(KomentarsID),
+       FOREIGN KEY (Sutitajs) REFERENCES FiziskaPersona(FiziskaPersonaId)
+);
+
+CREATE TABLE JuridiskaPersona(
+       JuridiskaPersonaID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+  	   Nosaukums varchar(50) NOT NULL,
+       RegistracijasNumurs varchar(20) NOT NULL,
+       Epasts varchar(40) NOT NULL
+);
+
+CREATE TABLE ZiedojumuSludinajums(
+  	   ZiedojumuSludinajumsID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+       Apraksts varchar(200),
+       Rekviziti varchar(100) NOT NULL,
+       FiziskaPersonaID INT NOT NULL FOREIGN KEY REFERENCES FiziskaPersona(FiziskaPersonaID),
+       JuridiskaPersonaID INT NOT NULL FOREIGN KEY REFERENCES JuridiskaPersona(JuridiskaPersonaID)
+);
+
+CREATE TABLE ZiedojumuTransakcija(
+       ZiedojumuTransakcijaID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+  	   Nosaukums varchar(50) NOT NULL,
+       RegistracijasNumurs varchar(20) NOT NULL,
+       Epasts varchar(40) NOT NULL,
+       FiziskaPersonaID INT NOT NULL FOREIGN KEY REFERENCES FiziskaPersona(FiziskaPersonaID),
+       JuridiskaPersonaID INT NOT NULL FOREIGN KEY REFERENCES JuridiskaPersona(JuridiskaPersonaID)
+  );
+  
+CREATE TABLE ZinojumsParKlainojosoDzivnieku(
+       ZinojumsParKlainojosoDzivniekuID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+       Adrese varchar(25) NOT NULL,
+       Skirne varchar(30),
+       Apraksts varchar(200) NOT NULL,
+       Tips varchar(20) NOT NULL,
+       FiziskaPersonaID INT NOT NULL FOREIGN KEY REFERENCES FiziskaPersona(FiziskaPersonaID),
+       JuridiskaPersonaID INT NOT NULL FOREIGN KEY REFERENCES JuridiskaPersona(JuridiskaPersonaID)
+);
